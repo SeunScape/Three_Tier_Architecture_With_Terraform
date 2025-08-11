@@ -1,1 +1,1 @@
-# Two-tier_Application_With_Terraform
+# Three-tier_Architecture_With_Terraform
