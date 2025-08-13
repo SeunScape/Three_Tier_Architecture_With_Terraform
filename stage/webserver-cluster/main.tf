@@ -1,5 +1,5 @@
 module web_server {
-  source = "../../stage/modules/services/webserver-cluster"
+  source = "../../modules/services/webserver-cluster"
   
   cluster_name = "test-cluster"
 

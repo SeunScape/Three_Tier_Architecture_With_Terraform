@@ -9,13 +9,6 @@ variable "cluster_name" {
     type = string
 }
 
-data "terraform_remote_state" "db" {
-    backend = "local"
-    config = {
-    path = "../data-storage/mysql/terraform.tfstate"
-  }
-}
-
 variable "instance_type" {
     description = "Instance type to run"
     type = string
@@ -31,6 +24,11 @@ variable "max_size"{
     type = number
 }
 
+# output "alb_security_group_id" {
+#     value = aws_security_group.alb.id
+#     description = "The ID of the Security Group attached to the load balancer"
+# }
+
 locals {
   http_port = 80
   any_port = 0
@@ -38,3 +36,26 @@ locals {
   tcp_protocol = "tcp"
   all_ips = ["0.0.0.0/0"]
 }
+
+#operations
+variable user_list {
+    description = "array of users"
+    type = list(string)
+    default = ["david", "cheryl", "paul"]
+
+}
+
+# variable "names" {
+#     description = "a map of boys and their hobbies"
+#     type = map(string)
+#     default = {
+#         john : "football"
+#         peter : "baseball"
+#         jonathan : "cricket"
+#     }
+# }
+
+# output boys {
+#     [for boyhobby : boy in var.names if length(boyhobby) < 10: "${name} is the ${role}" ]
+# }
+

@@ -10,10 +10,10 @@ resource "aws_launch_template" "config" {
 
     vpc_security_group_ids = [aws_security_group.instance-sg.id]
 
-    user_data = base64encode(templatefile("user-data.sh", {
+    user_data = base64encode(templatefile("${path.module}/user-data.sh", {
         server_port = var.port_number
-        db_address  = data.terraform_remote_state.db.outputs.db_address
-        db_port     = data.terraform_remote_state.db.outputs.db_port
+        # db_address  = data.terraform_remote_state.db.outputs.db_address
+        # db_port     = data.terraform_remote_state.db.outputs.db_port
     }))
 
     lifecycle {
@@ -147,9 +147,15 @@ resource "aws_autoscaling_group" "asg"{
     }
 }
 
-data "terraform_remote_state" "db" {
-    backend = "local"
-    config = {
-    path = "../data-storage/mysql/terraform.tfstate"
-  }
+# data "terraform_remote_state" "db" {
+#     backend = "local"
+#     config = {
+#     path = "${path.root}/../data-storage/mysql/terraform.tfstate"
+#   }
+# }
+
+resource "aws_iam_user" "users"{
+    count = length(var.user_list)
+
+    name = var.user_list[count.index]
 }
