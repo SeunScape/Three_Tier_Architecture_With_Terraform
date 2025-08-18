@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "file_operations": {
+      "read": true,
+      "write": true,
+      "create": true,
+      "rename": true,
+      "bulk_create": true,
+      "bulk_update": true
+    },
+    "terraform_commands": {
+      "fmt": true,
+      "validate": true,
+      "init": true,
+      "plan": true
+    },
+    "automated_tasks": {
+      "create_module_structure": true,
+      "update_multiple_files": true,
+      "search_and_replace": true,
+      "format_all_files": true,
+      "create_boilerplate": true,
+      "copy_patterns": true,
+      "rename_resources": true,
+      "update_variables": true,
+      "generate_outputs": true,
+      "fix_formatting": true
+    }
+  },
+  "skip_confirmation_for": [
+    "terraform fmt",
+    "terraform validate",
+    "creating standard module files",
+    "updating variable descriptions",
+    "adding outputs",
+    "creating similar resources",
+    "fixing indentation",
+    "adding tags",
+    "updating module documentation",
+    "creating test configurations"
+  ],
+  "always_require_confirmation": [
+    "terraform apply",
+    "terraform destroy",
+    "deleting files",
+    "git push",
+    "modifying production configs"
+  ]
+}

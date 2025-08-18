@@ -1,5 +1,0 @@
-module name {
-  source = "../../modules/data-storage/mysql"
-  
-  db_instance = "stage_db_instance"
-}
