@@ -1,7 +1,6 @@
 locals {
   name_prefix = "${var.project_name}-${var.environment}"
   
-  # Common networking values from existing code
   http_port    = 80
   any_port     = 0
   any_protocol = "-1"

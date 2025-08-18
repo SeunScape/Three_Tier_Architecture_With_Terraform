@@ -15,7 +15,6 @@ module "rds" {
   db_username         = var.db_username
   db_password         = var.db_password
   
-  # Stage environment settings
   allocated_storage     = 10
   instance_class       = "db.t3.micro"
   skip_final_snapshot  = true

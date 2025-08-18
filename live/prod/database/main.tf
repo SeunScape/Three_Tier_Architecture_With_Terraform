@@ -15,7 +15,6 @@ module "rds" {
   db_username         = var.db_username
   db_password         = var.db_password
   
-  # Production environment settings
   allocated_storage     = 20
   instance_class       = "db.t3.small"
   skip_final_snapshot  = false

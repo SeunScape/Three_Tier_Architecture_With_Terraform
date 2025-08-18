@@ -8,7 +8,6 @@ locals {
   server_port  = 8080
 }
 
-# VPC Module
 module "vpc" {
   source = "../../../modules/services/vpc"
   
@@ -16,7 +15,6 @@ module "vpc" {
   environment  = local.environment
 }
 
-# Security Groups Module
 module "security_groups" {
   source = "../../../modules/services/security_group"
   
@@ -25,7 +23,6 @@ module "security_groups" {
   server_port  = local.server_port
 }
 
-# Application Load Balancer Module
 module "alb" {
   source = "../../../modules/services/alb"
   
@@ -35,7 +32,6 @@ module "alb" {
   security_group_id = module.security_groups.alb_security_group_id
 }
 
-# Target Group Module
 module "target_group" {
   source = "../../../modules/services/target_group"
   
@@ -46,7 +42,6 @@ module "target_group" {
   listener_arn = module.alb.listener_arn
 }
 
-# Database Remote State (for user data template)
 data "terraform_remote_state" "db" {
   backend = "local"
   config = {
@@ -54,7 +49,6 @@ data "terraform_remote_state" "db" {
   }
 }
 
-# Auto Scaling Group Module
 module "asg" {
   source = "../../../modules/services/asg"
   
@@ -65,11 +59,8 @@ module "asg" {
   security_group_id  = module.security_groups.instance_security_group_id
   server_port        = local.server_port
   
-  # Database information
   db_address = data.terraform_remote_state.db.outputs.db_address
   db_port    = data.terraform_remote_state.db.outputs.db_port
-  
-  # Stage environment settings
   min_size         = 1
   max_size         = 2
   desired_capacity = 1
