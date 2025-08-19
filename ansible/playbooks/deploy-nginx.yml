@@ -1,0 +1,106 @@
+---
+
+- name: Deploy Nginx Web Server on EC2 Instances
+  hosts: all
+  become: yes
+  gather_facts: yes  
+  
+  vars:
+    nginx_port: 80
+    app_name: "Two-tier Terraform App"
+    
+  pre_tasks:
+    - name: Wait for instances to be ready
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+      
+    - name: Gather EC2 metadata
+      amazon.aws.ec2_metadata_facts:
+      
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600 
+        
+  tasks:
+    - name: Install Nginx web server
+      apt:
+        name: nginx
+        state: present 
+      notify: start nginx 
+      
+    - name: Create custom web content directory
+      file:
+        path: /var/www/html/custom
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        
+    - name: Deploy custom index.html from template
+      template:
+        src: ../templates/index.html.j2
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+        backup: yes
+      notify: reload nginx
+      
+    - name: Configure Nginx default site
+      template:
+        src: ../templates/nginx-default.j2
+        dest: /etc/nginx/sites-available/default
+        owner: root
+        group: root
+        mode: '0644'
+      notify: reload nginx
+      
+    - name: Ensure Nginx is started and enabled
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+        daemon_reload: yes
+        
+    - name: Allow Nginx through firewall
+      ufw:
+        rule: allow
+        name: 'Nginx Full'
+        state: enabled
+      ignore_errors: yes
+      
+    - name: Verify Nginx is responding
+      uri:
+        url: "http://{{ ansible_default_ipv4.address }}"
+        status_code: 200
+      retries: 3
+      delay: 5
+      delegate_to: localhost
+      become: no
+      
+  handlers:
+    - name: start nginx
+      systemd:
+        name: nginx
+        state: started
+        
+    - name: reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
+        
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
+        
+  post_tasks:
+    - name: Display web server URL
+      debug:
+        msg: 
+          - "Nginx successfully deployed!"
+          - "Access your web server at: http://{{ ansible_default_ipv4.address }}"
+          - "Instance ID: {{ ansible_ec2_instance_id }}"
+          - "Environment: {{ tags.Environment | default('unknown') }}"

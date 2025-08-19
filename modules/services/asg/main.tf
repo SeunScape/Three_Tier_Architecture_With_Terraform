@@ -2,10 +2,18 @@ locals {
   name_prefix = "${var.project_name}-${var.environment}"
 }
 
+variable "key_pair_name" {
+  description = "AWS EC2 Key Pair name for SSH access"
+  type        = string
+  default     = "terraform-web-key"
+}
+
 resource "aws_launch_template" "main" {
   name_prefix   = "${local.name_prefix}-lt-"
   image_id      = var.ami_id
   instance_type = var.instance_type
+
+  key_name = var.key_pair_name
 
   vpc_security_group_ids = [var.security_group_id]
 

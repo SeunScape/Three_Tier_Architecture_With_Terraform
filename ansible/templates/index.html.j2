@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        .info p {
+            margin: 0.5rem 0;
+        }
+        .status {
+            color: #4ade80;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Hello from {{ app_name }}!</h1>
+        <p>Deployed with Terraform + Ansible</p>
+        
+        <div class="info">
+            <p><strong>Instance Information:</strong></p>
+            <p>Hostname: {{ ansible_hostname }}</p>
+            <p>Instance ID: {{ ansible_ec2_instance_id | default('N/A') }}</p>
+            <p>Private IP: {{ ansible_default_ipv4.address }}</p>
+            <p>Availability Zone: {{ ansible_ec2_placement_availability_zone | default('N/A') }}</p>
+            <p>Environment: {{ tags.Environment | default('Development') }}</p>
+            <p class="status">✓ Nginx Server Running</p>
+        </div>
+        
+        <div class="info">
+            <p><strong>Deployment Details:</strong></p>
+            <p>Deployed: {{ ansible_date_time.iso8601 }}</p>
+            <p>OS: {{ ansible_distribution }} {{ ansible_distribution_version }}</p>
+            <p>Ansible Version: {{ ansible_version.full }}</p>
+        </div>
+    </div>
+</body>
+</html>

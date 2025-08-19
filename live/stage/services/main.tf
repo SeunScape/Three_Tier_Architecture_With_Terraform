@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  project_name = "myapp"
+  cluster_name = "myapp"
   environment  = "stage"
   server_port  = 8080
 }
@@ -11,14 +11,14 @@ locals {
 module "vpc" {
   source = "../../../modules/services/vpc"
   
-  project_name = local.project_name
+  project_name = local.cluster_name
   environment  = local.environment
 }
 
 module "security_groups" {
   source = "../../../modules/services/security_group"
   
-  project_name = local.project_name
+  project_name = local.cluster_name
   environment  = local.environment
   server_port  = local.server_port
 }
@@ -26,7 +26,7 @@ module "security_groups" {
 module "alb" {
   source = "../../../modules/services/alb"
   
-  project_name      = local.project_name
+  project_name      = local.cluster_name
   environment       = local.environment
   subnet_ids        = module.vpc.subnet_ids
   security_group_id = module.security_groups.alb_security_group_id
@@ -35,7 +35,7 @@ module "alb" {
 module "target_group" {
   source = "../../../modules/services/target_group"
   
-  project_name = local.project_name
+  project_name = local.cluster_name
   environment  = local.environment
   vpc_id       = module.vpc.vpc_id
   server_port  = local.server_port
@@ -52,7 +52,7 @@ data "terraform_remote_state" "db" {
 module "asg" {
   source = "../../../modules/services/asg"
   
-  project_name       = local.project_name
+  project_name       = local.cluster_name
   environment        = local.environment
   subnet_ids         = module.vpc.subnet_ids
   target_group_arns  = [module.target_group.target_group_arn]
