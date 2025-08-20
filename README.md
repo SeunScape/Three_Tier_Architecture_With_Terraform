@@ -14,23 +14,8 @@ The infrastructure serves a web application with automated scaling, load balanci
 ## 📐 Architecture
 
 ```
-Internet
-    |
-    ↓
-Application Load Balancer (ALB)
-    |
-    ↓
-Target Group
-    |
-    ↓
-Auto Scaling Group (ASG)
-    |
-    ├── EC2 Instance 1 (Nginx)
-    ├── EC2 Instance 2 (Nginx)
-    └── EC2 Instance N (Nginx)
-            |
-            ↓
-        RDS MySQL Database
+<img width="1312" height="1596" alt="terraform-ansible-architecture-clean" src="https://github.com/user-attachments/assets/6d1d7d89-d7fb-4826-baba-048c9491f267" />
+
 ```
 
 ### Component Interactions
