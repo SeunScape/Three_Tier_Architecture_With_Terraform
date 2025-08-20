@@ -13,7 +13,25 @@ The infrastructure serves a web application with automated scaling, load balanci
 
 ## 📐 Architecture
 
-![Architecture Diagram](images/architecture-diagram.png)
+```
+Internet
+    |
+    ↓
+Application Load Balancer (ALB)
+    |
+    ↓
+Target Group
+    |
+    ↓
+Auto Scaling Group (ASG)
+    |
+    ├── EC2 Instance 1 (Nginx)
+    ├── EC2 Instance 2 (Nginx)
+    └── EC2 Instance N (Nginx)
+            |
+            ↓
+        RDS MySQL Database
+```
 
 ### Component Interactions
 
